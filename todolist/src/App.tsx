@@ -1,41 +1,56 @@
 import React, {useState} from 'react';
 import './App.css';
 import TodoList, {TaskType} from "./TodoList";
+import {v1} from "uuid";
 
 export type FilterValuesType = "all" | "active" | "completed"
 
 function App(): JSX.Element {
+
+    console.log(typeof v1())
+
     //BLL:
+
     const todoListTitle: string = "What to learn"
-
-
     const [tasks, setTasks] = useState<Array<TaskType>>([
-        {id: 1, title: "HTML & CSS", isDone: true},
-        {id: 2, title: "ES6 & TS", isDone: true},
-        {id: 3, title: "React & Redux", isDone: false},
+        {id: v1(), title: "HTML & CSS", isDone: true},
+        {id: v1(), title: "ES6 & TS", isDone: true},
+        {id: v1(), title: "React & Redux", isDone: false},
     ])
-    const removeTask = (taskId: number) => {
-       const updatedTasks = tasks.filter(t => t.id !== taskId)
+    const removeTask = (taskId: string) => {
+        const updatedTasks = tasks.filter(t => t.id !== taskId)
         setTasks(updatedTasks)
     }
 
-    const [filter, setFilter] = React.useState<FilterValuesType>("all")
+    const addTasks = (title: string) => {
+        const newTasks: TaskType = {
+            id: v1(),
+            title: title,
+            isDone: false
+        }
+        setTasks([newTasks, ...tasks])
+    }
 
+
+    const [filter, setFilter] = React.useState<FilterValuesType>("all")
 
     const changeFilterValue = (filter: FilterValuesType) => setFilter(filter)
 
-    let filteredTasks: Array<TaskType> = []
-
-    if (filter === "all") {
-        filteredTasks = tasks
+    const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
+        switch (filter) {
+            case "active":
+                return tasks.filter(t => t.isDone === false)
+            case "completed":
+                return tasks.filter(t => t.isDone === true)
+            default:
+                return tasks
+        }
     }
 
-    if (filter === "active") {
-        filteredTasks = tasks.filter(t => t.isDone === false)
-    }
-    if (filter === "completed") {
-        filteredTasks = tasks.filter(t => t.isDone === true)
-    }
+
+    let filteredTasks: Array<TaskType> = getFilteredTasks(tasks, filter)
+
+
     //UI:
     return (
         <div className="App">
@@ -44,6 +59,7 @@ function App(): JSX.Element {
                 tasks={filteredTasks}
                 changeFilterValue={changeFilterValue}
                 removeTask={removeTask}
+                addTask={addTasks}
             />
         </div>
     );
