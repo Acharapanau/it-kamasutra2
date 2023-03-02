@@ -28,8 +28,8 @@ const TodoList: FC<TodoListPropsType> = (props): JSX.Element => {
     const changeLocalTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.currentTarget.value)
 
     const setAllFilterValue = () => props.changeFilterValue("all")
-    const setAllFilterActive = () => props.changeFilterValue("active")
-    const setAllFilterCompleted = () => props.changeFilterValue("completed")
+    const setActiveFilterValue = () => props.changeFilterValue("active")
+    const setCompletedFilterValue = () => props.changeFilterValue("completed")
 
     const onKeyDownTask = (e: React.KeyboardEvent) => e.key === "Enter" && addTask()
     const addTask = () => {
@@ -58,8 +58,8 @@ const TodoList: FC<TodoListPropsType> = (props): JSX.Element => {
             <TasksList tasks={props.tasks} removeTask={props.removeTask}/>
             <div>
                 <button onClick={setAllFilterValue}>All</button>
-                <button onClick={setAllFilterActive}>Active</button>
-                <button onClick={setAllFilterCompleted}>Completed</button>
+                <button onClick={setActiveFilterValue}>Active</button>
+                <button onClick={setCompletedFilterValue}>Completed</button>
             </div>
         </div>
     );
